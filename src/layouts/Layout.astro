@@ -1,3 +1,57 @@
 ---
-import '../styles/global.css'
+import { TooltipProvider } from "@/components/ui/tooltip";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer";
+import "../styles/global.css";
 ---
+
+<script is:inline>
+    const getThemePreference = () => {
+        if (
+            typeof localStorage !== "undefined" &&
+            localStorage.getItem("theme")
+        ) {
+            return localStorage.getItem("theme");
+        }
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+    };
+    const isDark = getThemePreference() === "dark";
+    document.documentElement.classList[isDark ? "add" : "remove"]("dark");
+
+    if (typeof localStorage !== "undefined") {
+        const observer = new MutationObserver(() => {
+            const isDark = document.documentElement.classList.contains("dark");
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+        });
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"],
+        });
+    }
+</script>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>Astro</title>
+    </head>
+    <body class="w-full max-w-full flex flex-col items-center justify-center">
+        <TooltipProvider>
+            <div
+                class="w-full sm:max-w-2/3 flex flex-col h-screen max-h-screen overflow-auto p-3 gap-3"
+            >
+                <Header />
+                <main class="flex h-full">
+                    <slot />
+                </main>
+                <Footer />
+            </div>
+        </TooltipProvider>
+    </body>
+</html>

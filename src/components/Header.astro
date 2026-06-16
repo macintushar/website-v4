@@ -1,0 +1,11 @@
+---
+import { NAME } from "../constants";
+import ModeToggle from "./mode-toggle";
+---
+
+<header class="flex justify-between items-center-safe pb-3 border-b">
+    <div class="w-full">
+        <h1 class="text-3xl font-heading">{NAME}</h1>
+    </div>
+    <ModeToggle client:load />
+</header>
